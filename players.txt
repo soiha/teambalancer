@@ -3,7 +3,7 @@ ZionCross:3700
 Cheshire137:3505
 MightyKorf:2140
 ArielUltra:2570
-Celluj34:2100
+Celluj34:2350
 Bellwether:2020
 Seed:3002
 Siege911:2700
