@@ -17,8 +17,6 @@ def getWeight(SR):
     if SR > 1500:
         weight = 0.6
     if SR > 2000:
-        weight = 0.8
-    if SR > 2500:
         weight = 1
     if SR > 3000:
         weight = 1.2
