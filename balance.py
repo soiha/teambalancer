@@ -21,7 +21,7 @@ class Scraper:
                     try:
                         parsed_rating = int(sr_maybe)
                     except Exception:
-                        print ("Could not parse SR for %s, using" % (player.name, player.rating) )
+                        print ("Could not parse SR for %s, using" % (player.name, player.sr) )
                 break
             except urllib2.HTTPError:
                 continue
@@ -62,7 +62,6 @@ class Player:
 def readPlayers(fileName):
     f = open(fileName, 'r')
     for line in f:
-        print line[:-1]
         player = Player(line[:-1])
         players.append(player)
     f.close()
@@ -117,13 +116,13 @@ if __name__ == "__main__":
             redTeamWeightedSR += p.getWeightedSR()
             redTeamAverageSR += p.getSR()
             print ("    Sorted "+ p.getName() + " to red team")
-            print ("    RedTeam has weighted SR " + str(redTeamWeightedSR))
         else:
             blueTeam.append(p)
             blueTeamWeightedSR += p.getWeightedSR()
             blueTeamAverageSR += p.getSR()
             print ("    Sorted "+ p.getName() + " to blue team")
-            print ("    BlueTeam has weighted SR " + str(blueTeamWeightedSR))
+    print("Sorting complete")
+    print("-------------")
 
     #Print the teams
     print ("Red Team: " + str((redTeamAverageSR)/len(redTeam)))
