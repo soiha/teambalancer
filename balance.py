@@ -27,32 +27,43 @@ class Scraper:
                 continue
         if parsed_rating != -1:
             print ("Got SR for %s: %d" % (player.name, parsed_rating))
-            player.rating = parsed_rating
+            player.setSR(parsed_rating)
         else:
-            print ("Rating not found for %s, using %d" % (player.name, player.rating))
+            print ("Rating not found for %s, using %d" % (player.name, player.sr))
 
     def __init__(self):
         pass
 
 class Player:
-    def __init__(self, name, rating):
+    #Default role to flex, and sr to 2300
+    def __init__(self, name):
         self.name = name
-        self.rating = int(rating)
-        self.primaryCharacter = ""
+        self.sr = 2300
+        self.role = "flex"
+
+    def getName(self):
+        return self.name
+
+    def setSR(self, sr):
+        self.sr = sr
+
+    def getWeightedSR(self):
+        return float(self.sr) * getWeight(self.sr)
+
+    def getSR(self):
+        return self.sr
+
+    def setRole(self, role):
+        self.role = role
+
 
 def readPlayers(fileName):
     f = open(fileName, 'r')
     for line in f:
-        tokens = line.split(':')
-        if len(tokens) == 2: 
-            addPlayer(tokens[0], tokens[1][:-1])
-        else:
-            addPlayer(tokens[0][:-1], 2500)
+        print line[:-1]
+        player = Player(line[:-1])
+        players.append(player)
     f.close()
-    return
-
-def addPlayer(playerName, SR ):
-    players[playerName] = Player(playerName, SR)
     return
 
 def getWeight(SR):
@@ -72,42 +83,41 @@ def getWeight(SR):
     return weight
  
 
-
 if __name__ == "__main__":
     #Grab the list of players
-    players = {}
+    players = []
     readPlayers('players.txt')
-    
+
     # Try scraping SRs
     scraper = Scraper()
-    [scraper.scrape(p) for p in players.values()]
-
+    for p in players:
+        scraper.scrape(p)
+    
     #Create the two teams
-    redTeam = {}
+    redTeam = []
     redTeamAverageSR = 0
     redTeamWeightedSR = 0
-    blueTeam = {}
+    blueTeam = []
     blueTeamAverageSR = 0
     blueTeamWeightedSR = 0
 
     #Greedy algorithm. Sort by weighted SR and pop off
-    for x in sorted(players, key=players.get):
-        SR = int(players[x].rating)
-        WSR = float(players[x].rating) * getWeight(players[x].rating)
+    players.sort(key=lambda x: x.getSR(), reverse=True)
+    for p in players:
         if redTeamWeightedSR < blueTeamWeightedSR:
-            redTeam[x] = players[x]
-            redTeamWeightedSR += WSR
-            redTeamAverageSR += SR
+            redTeam.append(p)
+            redTeamWeightedSR += p.getWeightedSR()
+            redTeamAverageSR += p.getSR()
         else:
-            blueTeam[x] = players[x]
-            blueTeamWeightedSR += WSR
-            blueTeamAverageSR += SR
+            blueTeam.append(p)
+            blueTeamWeightedSR += p.getWeightedSR()
+            blueTeamAverageSR += p.getSR()
 
     #Print the teams
     print ("Red Team Average SR: " + str((redTeamAverageSR)/len(redTeam)))
-    for i in redTeam:
-        print (i, redTeam[i].rating)
+    for p in redTeam:
+        print p.getName()
     print ("------------")
     print ("Blue Team Average SR: " + str((blueTeamAverageSR)/len(blueTeam)))
-    for i in blueTeam:
-        print (i, blueTeam[i].rating)
+    for p in blueTeam:
+        print p.getName()
