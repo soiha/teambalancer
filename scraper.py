@@ -7,8 +7,8 @@ import urllib.error
 class Scraper:
     def __init__(self):
         self.regex_search = "\<div class=\"competitive-rank\"\>\<img src=\".+\"/\>\<div class=\"u-align-center h6\"\>([0-9]+)\</div\>"
-        self.url_base = "https://playoverwatch.com/en-us/career/pc"
-        self.regions = ("/us/", "/eu/")
+        self.url_base = "https://playoverwatch.com/en-us/career/pc/"
+        self.regions = ("us/", "eu/")
 
     def scrape(self, player):
         player_id = player.id.replace("#", "-")
@@ -18,9 +18,8 @@ class Scraper:
             try:
                 req = urllib.request.urlopen(self.url_base + region + player_id)
                 if req.getcode() != 404:
-                    result = req.read()
-                    resultStr = result.decode('utf-8')
-                    match = re.search(self.regex_search, resultStr)
+                    result = req.read().decode('utf-8')
+                    match = re.search(self.regex_search, result)
                     sr_maybe = match.group(1)
                     try:
                         parsed_rating = int(sr_maybe)
@@ -39,14 +38,14 @@ class Scraper:
         # Generating overbuff profile link and grabbing data
         profile_link = "https://www.overbuff.com/players/pc/" + player_id
         response = urllib.request.urlopen(profile_link + "?mode=competitive")
-        page_source = response.read()
+        page_source = response.read().decode('utf-8')
 
         # Grab number of lines
         nlines = len(page_source.splitlines())
         # If competitive data is not found, collect quick play data
         if (nlines < 4):
             response = urllib.request.urlopen(profile_link)
-            page_source = response.read()
+            page_source = response.read().decode('utf-8')
             # Grab number of lines
             nlines = len(page_source.splitlines())
 
