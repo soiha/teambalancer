@@ -60,12 +60,15 @@ class Player:
 
 
 def readPlayers(fileName):
+    filePlayers = []
     f = open(fileName, 'r')
     for line in f:
-        player = Player(line[:-1])
-        players.append(player)
+        player = line[:-1]
+        print player
+        filePlayer = Player(player)
+        filePlayers.append(filePlayer)
     f.close()
-    return
+    return filePlayers
 
 def getWeight(SR):
     weight = 0.2
@@ -90,8 +93,7 @@ def printTeam(team):
 
 if __name__ == "__main__":
     #Grab the list of players
-    players = []
-    readPlayers('players.txt')
+    players = readPlayers('players.txt')
 
     # Try scraping SRs
     scraper = Scraper()
