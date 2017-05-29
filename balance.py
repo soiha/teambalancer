@@ -3,7 +3,7 @@ import re
 
 class Scraper:
     def scrape(self, player):
-        urlend = player.name.replace("#", "-")
+        urlend = player.id.replace("#", "-")
         url_base = "https://playoverwatch.com/en-us/career/pc"
         urls = (url_base+"/us/"+urlend, url_base+"/eu/"+urlend)
         
@@ -36,10 +36,12 @@ class Scraper:
 
 class Player:
     #Default role to flex, and sr to 2300
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, id):
+        self.id = id
         self.sr = 2300
         self.role = "flex"
+        display = id.split('#')
+        self.name = display[0]
 
     def getName(self):
         return self.name
@@ -81,7 +83,10 @@ def getWeight(SR):
     if SR > 4000:
         weight = 1.6
     return weight
- 
+
+#Gonna make it look real nice
+def printTeam(team):
+    return
 
 if __name__ == "__main__":
     #Grab the list of players
@@ -103,15 +108,21 @@ if __name__ == "__main__":
 
     #Greedy algorithm. Sort by weighted SR and pop off
     players.sort(key=lambda x: x.getSR(), reverse=True)
+    print ("Begin Sorting")
     for p in players:
+        print ("  Sorting " + p.getName())
         if redTeamWeightedSR < blueTeamWeightedSR:
             redTeam.append(p)
             redTeamWeightedSR += p.getWeightedSR()
             redTeamAverageSR += p.getSR()
+            print ("    Sorted "+ p.getName() + " to red team")
+            print ("    RedTeam has weighted SR " + str(redTeamWeightedSR))
         else:
             blueTeam.append(p)
             blueTeamWeightedSR += p.getWeightedSR()
             blueTeamAverageSR += p.getSR()
+            print ("    Sorted "+ p.getName() + " to blue team")
+            print ("    BlueTeam has weighted SR " + str(blueTeamWeightedSR))
 
     #Print the teams
     print ("Red Team Average SR: " + str((redTeamAverageSR)/len(redTeam)))
