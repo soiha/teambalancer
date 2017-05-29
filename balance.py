@@ -86,7 +86,8 @@ def getWeight(SR):
 
 #Gonna make it look real nice
 def printTeam(team):
-    return
+    for p in team:
+        print("| " + p.getName())
 
 if __name__ == "__main__":
     #Grab the list of players
@@ -125,10 +126,8 @@ if __name__ == "__main__":
             print ("    BlueTeam has weighted SR " + str(blueTeamWeightedSR))
 
     #Print the teams
-    print ("Red Team Average SR: " + str((redTeamAverageSR)/len(redTeam)))
-    for p in redTeam:
-        print p.getName()
+    print ("Red Team: " + str((redTeamAverageSR)/len(redTeam)))
+    printTeam(redTeam)
     print ("------------")
-    print ("Blue Team Average SR: " + str((blueTeamAverageSR)/len(blueTeam)))
-    for p in blueTeam:
-        print p.getName()
+    print ("Blue Team: " + str((blueTeamAverageSR)/len(blueTeam)))
+    printTeam(blueTeam)
