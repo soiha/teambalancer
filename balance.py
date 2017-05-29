@@ -21,15 +21,15 @@ class Scraper:
                     try:
                         parsed_rating = int(sr_maybe)
                     except Exception:
-                        print ("Could not parse SR for %s, using" % (player.name, player.sr) )
+                        print ("-->Could not parse SR for %s, using" % (player.name, player.sr) )
                 break
             except urllib2.HTTPError:
                 continue
         if parsed_rating != -1:
-            print ("Got SR for %s: %d" % (player.name, parsed_rating))
+            print ("-->Got SR for %s: %d" % (player.name, parsed_rating))
             player.setSR(parsed_rating)
         else:
-            print ("Rating not found for %s, using %d" % (player.name, player.sr))
+            print ("-->Rating not found for %s, using %d" % (player.name, player.sr))
 
     def __init__(self):
         pass
@@ -62,11 +62,13 @@ class Player:
 def readPlayers(fileName):
     filePlayers = []
     f = open(fileName, 'r')
+    scraper = Scraper()
     for line in f:
-        player = line[:-1]
-        print player
-        filePlayer = Player(player)
-        filePlayers.append(filePlayer)
+        playerID = line[:-1]
+        print playerID
+        player = Player(playerID)
+        filePlayers.append(player)
+        scraper.scrape(player)
     f.close()
     return filePlayers
 
@@ -92,14 +94,10 @@ def printTeam(team):
         print("| " + p.getName())
 
 if __name__ == "__main__":
-    #Grab the list of players
+    #Initialize the players
     players = readPlayers('players.txt')
+    players.sort(key=lambda x: x.getSR(), reverse=True)
 
-    # Try scraping SRs
-    scraper = Scraper()
-    for p in players:
-        scraper.scrape(p)
-    
     #Create the two teams
     redTeam = []
     redTeamAverageSR = 0
@@ -109,7 +107,6 @@ if __name__ == "__main__":
     blueTeamWeightedSR = 0
 
     #Greedy algorithm. Sort by weighted SR and pop off
-    players.sort(key=lambda x: x.getSR(), reverse=True)
     print ("Begin Sorting")
     for p in players:
         print ("  Sorting " + p.getName())
