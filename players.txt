@@ -1,12 +1,3 @@
-ATastySnack:3298
-ZionCross:3700
-Cheshire137:3505
-MightyKorf:2140
-ArielUltra:2570
-Celluj34:2350
-Bellwether:2020
-Seed:3002
-Siege911:2700
-Backslash:2000
-MrSoftServe:3200
-Karq:4200
+KarQ#1811
+ATastySnack#1553
+ChupaThingy#1698
