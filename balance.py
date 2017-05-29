@@ -5,7 +5,7 @@ class Scraper:
     def scrape(self, player):
         urlend = player.name.replace("#", "-")
         url_base = "https://playoverwatch.com/en-us/career/pc"
-        urls = (url_base+"/na/"+urlend, url_base+"/eu/"+urlend)
+        urls = (url_base+"/us/"+urlend, url_base+"/eu/"+urlend)
         
         #<div class="competitive-rank"><img src="https://blzgdapipro-a.akamaihd.net/game/rank-icons/season-2/rank-3.png"/><div class="u-align-center h6">2183</div>
         
