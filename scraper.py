@@ -20,8 +20,8 @@ class Scraper:
                 if req.getcode() != 404:
                     result = req.read().decode('utf-8')
                     match = re.search(self.regex_search, result)
-                    sr_maybe = match.group(1)
                     try:
+                        sr_maybe = match.group(1)
                         parsed_rating = int(sr_maybe)
                     except Exception:
                         print("-->Could not parse SR for %s, using %d" % (player.name, player.sr))
