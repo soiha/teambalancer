@@ -24,7 +24,7 @@ class Scraper:
                     try:
                         parsed_rating = int(sr_maybe)
                     except Exception:
-                        print("-->Could not parse SR for %s, using %s" % (player.name, player.sr))
+                        print("-->Could not parse SR for %s, using %d" % (player.name, player.sr))
                 break
             except urllib.error.HTTPError:
                 continue
@@ -36,7 +36,6 @@ class Scraper:
             player.setSR(parsed_rating)
 
         # Generating overbuff profile link and grabbing data
-
         try:
             profile_link = "https://www.overbuff.com/players/pc/" + player_id
             response = urllib.request.urlopen(profile_link + "?mode=competitive")
@@ -45,6 +44,7 @@ class Scraper:
 
             # Grab number of lines
             num_lines = len(page_source.splitlines())
+
             # If competitive data is not found, collect quick play data
             if (num_lines < 4):
                 response = urllib.request.urlopen(profile_link)
@@ -71,7 +71,7 @@ class Scraper:
                 parsed_role = sorted(hero_mains.items(), key=lambda k_v: k_v[1], reverse=True)[0][0]
                 parsed_backup_role = sorted(hero_mains.items(), key=lambda k_v: k_v[1], reverse=True)[1][0]
                 print("-->Got role for %s: %s/%s" % (player.name, parsed_role, parsed_backup_role))
-                player.setRole(parsed_role)
+                player.setRole(parsed_role + '/' + parsed_backup_role)
             except IndexError:
                 print("-->Could not parse role for %s, using %s" % (player.name, player.role))
         except urllib.error.HTTPError:

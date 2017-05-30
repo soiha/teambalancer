@@ -16,7 +16,7 @@ def readPlayers(fileName):
     return file_players
 
 
-#Takes in a list of players and partitions them into two 
+#Takes in a list of players and partitions them into two
 #teams using least difference heuristic
 def partition(player_list):
     red_team = []
