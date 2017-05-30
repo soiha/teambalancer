@@ -163,8 +163,8 @@ def partition(playerList):
 # Gonna make it look real nice
 def printTeam(team):
     for p in team:
-        string = '{:14}'.format(p.getName()) + '{:>10}'.format(p.getRole())
-        print ('| ' + string)
+        string = '{:14}'.format(p.getName()) + '{:4}'.format(p.getSR()) + '{:>10}'.format(p.getRole())
+        print ('| ' + string + ' |')
      
 
 if __name__ == "__main__":
@@ -176,9 +176,9 @@ if __name__ == "__main__":
     print ("Begin Sorting")
     redTeam, blueTeam = partition(players)
     print("Sorting complete")
-    print("-------------")
+    print("--------------------------------")
 
     # Print the teams
     printTeam(redTeam)
-    print ("------------")
+    print("--------------------------------")
     printTeam(blueTeam)
