@@ -64,10 +64,10 @@ class Scraper:
             # Collect hero roles based on amount of time played
             hero_mains = {}
             try:
-                hero_mains["Support"] = int(support[0])
-                hero_mains["Tank"] = int(tank[0])
-                hero_mains["Defense"] = int(defense[0])
-                hero_mains["Offense"] = int(offense[0])
+                hero_mains["Support"] = int(support[0]) if len(support) > 0 else 0
+                hero_mains["Tank"] = int(tank[0]) if len(tank) > 0 else 0
+                hero_mains["Defense"] = int(defense[0])  if len(defense) > 0  else 0
+                hero_mains["Offense"] = int(offense[0]) if len(offense) > 0 else 0
                 parsed_role = sorted(hero_mains.items(), key=lambda k_v: k_v[1], reverse=True)[0][0]
                 parsed_backup_role = sorted(hero_mains.items(), key=lambda k_v: k_v[1], reverse=True)[1][0]
                 print("-->Got role for %s: %s/%s" % (player.name, parsed_role, parsed_backup_role))
