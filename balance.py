@@ -100,6 +100,9 @@ class Player:
     def getSR(self):
         return self.sr
 
+    def getRole(self):
+        return self.role
+
     def setRole(self, role):
         self.role = role
 
@@ -134,29 +137,16 @@ def getWeight(SR):
         weight = 1.6
     return weight
 
-
-# Gonna make it look real nice
-def printTeam(team):
-    for p in team:
-        print("| " + p.getName())
-
-
-if __name__ == "__main__":
-    # Initialize the players
-    players = readPlayers('players.txt')
-    players.sort(key=lambda x: x.getSR(), reverse=True)
-
-    # Create the two teams
+#Takes in a list of players and partitions them into two 
+#teams using least difference heuristic
+def partition(playerList):
     redTeam = []
     redTeamAverageSR = 0
     redTeamWeightedSR = 0
     blueTeam = []
     blueTeamAverageSR = 0
     blueTeamWeightedSR = 0
-
-    # Greedy algorithm. Sort by weighted SR and pop off
-    print ("Begin Sorting")
-    for p in players:
+    for p in playerList:
         print ("  Sorting " + p.getName())
         if redTeamWeightedSR < blueTeamWeightedSR:
             redTeam.append(p)
@@ -168,12 +158,27 @@ if __name__ == "__main__":
             blueTeamWeightedSR += p.getWeightedSR()
             blueTeamAverageSR += p.getSR()
             print ("    Sorted " + p.getName() + " to blue team")
+    return redTeam, blueTeam
+    
+# Gonna make it look real nice
+def printTeam(team):
+    for p in team:
+        string = '{:14}'.format(p.getName()) + '{:>10}'.format(p.getRole())
+        print ('| ' + string)
+     
+
+if __name__ == "__main__":
+    # Initialize the players
+    players = readPlayers('players.txt')
+    players.sort(key=lambda x: x.getSR(), reverse=True)
+
+    # Greedy algorithm. Sort by weighted SR and pop off
+    print ("Begin Sorting")
+    redTeam, blueTeam = partition(players)
     print("Sorting complete")
     print("-------------")
 
     # Print the teams
-    print ("Red Team: " + str((redTeamAverageSR) / len(redTeam)))
     printTeam(redTeam)
     print ("------------")
-    print ("Blue Team: " + str((blueTeamAverageSR) / len(blueTeam)))
     printTeam(blueTeam)
