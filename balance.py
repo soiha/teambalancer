@@ -23,7 +23,7 @@ class Scraper:
                     try:
                         parsed_rating = int(sr_maybe)
                     except Exception:
-                        print ("-->Could not parse SR for %s, using" % (player.name, player.sr))
+                        print ("-->Could not parse SR for %s, using %d" % (player.name, player.sr))
                 break
             except urllib2.HTTPError:
                 continue
@@ -34,42 +34,46 @@ class Scraper:
             print ("-->Rating not found for %s, using %d" % (player.name, player.sr))
 
         # Generating overbuff profile link and grabbing data
-        profile_link = "https://www.overbuff.com/players/pc/" + urlend + "?mode=competitive"
-        response = urllib2.urlopen(profile_link)
-        page_source = response.read()
-
-        # Grab number of lines
-        nlines = len(page_source.splitlines())
-        # If competitive data is not found, collect quick play data
-        if (nlines < 4):
-            profile_link = "https://www.overbuff.com/players/pc/" + urlend
+        try:
+            profile_link = "https://www.overbuff.com/players/pc/" + urlend + "?mode=competitive"
             response = urllib2.urlopen(profile_link)
-            page_source = response.read()
+            if response.getcode() != 404:
+                page_source = response.read()
             # Grab number of lines
             nlines = len(page_source.splitlines())
 
-        # Main hero classes are on the last line
-        mains = page_source.splitlines()[nlines - 1]
-        # Parse and print sorted hero classes
-        parsed_role = 'Flex'
-        support = re.findall(r'Support</a><small><span data-time="(.*?)" data-time-format', mains)
-        tank = re.findall(r'Tank</a><small><span data-time="(.*?)" data-time-format', mains)
-        defense = re.findall(r'Defense</a><small><span data-time="(.*?)" data-time-format', mains)
-        offense = re.findall(r'Offense</a><small><span data-time="(.*?)" data-time-format', mains)
+            # If competitive data is not found, collect quick play data
+            if (nlines < 4):
+                profile_link = "https://www.overbuff.com/players/pc/" + urlend
+                response = urllib2.urlopen(profile_link)
+                page_source = response.read()
+                # Grab number of lines
+                nlines = len(page_source.splitlines())
 
-        # Collect hero roles based on amount of time played
-        heroMains = {}
-        try:
-            heroMains["Support"] = int(support[0])
-            heroMains["Tank"] = int(tank[0])
-            heroMains["Defense"] = int(defense[0])
-            heroMains["Offense"] = int(offense[0])
-            parsed_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[0][0]
-            parsed_backup_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[1][0]
-            print ("-->Got role for %s: %s/%s" % (player.name, parsed_role, parsed_backup_role))
-            player.setRole(parsed_role)
-        except IndexError:
-            print ("-->Could not parse role for %s, using" % (player.name, player.role))
+            # Main hero classes are on the last line
+            mains = page_source.splitlines()[nlines - 1]
+            # Parse and print sorted hero classes
+            parsed_role = 'Flex'
+            support = re.findall(r'Support</a><small><span data-time="(.*?)" data-time-format', mains)
+            tank = re.findall(r'Tank</a><small><span data-time="(.*?)" data-time-format', mains)
+            defense = re.findall(r'Defense</a><small><span data-time="(.*?)" data-time-format', mains)
+            offense = re.findall(r'Offense</a><small><span data-time="(.*?)" data-time-format', mains)
+
+            # Collect hero roles based on amount of time played
+            heroMains = {}
+            try:
+                heroMains["Support"] = int(support[0])
+                heroMains["Tank"] = int(tank[0])
+                heroMains["Defense"] = int(defense[0])
+                heroMains["Offense"] = int(offense[0])
+                parsed_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[0][0]
+                parsed_backup_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[1][0]
+                print ("-->Got role for %s: %s/%s" % (player.name, parsed_role, parsed_backup_role))
+                player.setRole(parsed_role)
+            except IndexError:
+                print ("-->Could not parse role for %s, using %s" % (player.name, player.role))
+        except urllib2.HTTPError:
+            print ("-->Could not parse role for %s, using %s" % (player.name, player.role))
 
     def __init__(self):
         pass
@@ -80,7 +84,7 @@ class Player:
     def __init__(self, id):
         self.id = id
         self.sr = 2300
-        self.role = "flex"
+        self.role = "Flex"
         display = id.split('#')
         self.name = display[0]
 
