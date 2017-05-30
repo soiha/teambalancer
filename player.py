@@ -3,7 +3,7 @@ class Player:
     def __init__(self, id):
         self.id = id
         self.sr = 2300
-        self.role = "flex"
+        self.role = "Flex"
         self.name = id.split('#')[0]
 
     def getName(self):
@@ -17,6 +17,9 @@ class Player:
 
     def getSR(self):
         return self.sr
+
+    def getRole(self):
+        return self.role
 
     def setRole(self, role):
         self.role = role
