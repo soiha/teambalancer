@@ -69,7 +69,7 @@ class Scraper:
                 parsed_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[0][0]
                 parsed_backup_role = sorted(heroMains.items(), key=lambda (k, v): v, reverse=True)[1][0]
                 print ("-->Got role for %s: %s/%s" % (player.name, parsed_role, parsed_backup_role))
-                player.setRole(parsed_role)
+                player.setRole(parsed_role + '/' + parsed_backup_role)
             except IndexError:
                 print ("-->Could not parse role for %s, using %s" % (player.name, player.role))
         except urllib2.HTTPError:
@@ -163,7 +163,7 @@ def partition(playerList):
 # Gonna make it look real nice
 def printTeam(team):
     for p in team:
-        string = '{:14}'.format(p.getName()) + '{:4}'.format(p.getSR()) + '{:>10}'.format(p.getRole())
+        string = '{:14}'.format(p.getName()) + '{:4}'.format(p.getSR()) + '{:>18}'.format(p.getRole())
         print ('| ' + string + ' |')
      
 
@@ -176,9 +176,9 @@ if __name__ == "__main__":
     print ("Begin Sorting")
     redTeam, blueTeam = partition(players)
     print("Sorting complete")
-    print("--------------------------------")
+    print("----------------------------------------")
 
     # Print the teams
     printTeam(redTeam)
-    print("--------------------------------")
+    print("----------------------------------------")
     printTeam(blueTeam)
